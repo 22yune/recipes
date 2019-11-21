@@ -31,28 +31,49 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
     #///////////////////
     
     def parse_index(self):
-        indexs = ['/docs/zh/spring-framework/5.1.3.RELEASE/reference']
+        indexs = ['/docs/zh/spring-framework/4.3.21.RELEASE/reference']
         ans = [] # 组成最终的数据结构
         for index in indexs :
             doc = self.parse_doc(index)
-            ans.append(doc)
+            ans = ans + doc
         return ans # 返回可供 Calibre 转换的数据结构
-        
+    
     def parse_doc(self,index):
         site = 'https://www.docs4dev.com' # 页面列表页
         #index = '/docs/zh/spring-framework/5.1.3.RELEASE/reference'
         soup = self.index_to_soup(site + index) # 解析列表页返回 BeautifulSoup 对象
-        doctitle = soup.title.string
-        print '==='
-        print soup.findAll(name="description")
-        print '==='
-        #self.description = soup.findAll(name="description")['content']
-        links = soup.findAll("li",{"class":"level1"}) # 获取所有文章链接
+        self.title = soup.find('title').contents[0]
+        print 'title' 
+        print soup.find('title').contents
+        if self.title == None :
+            return
+        #print '==='
+        #print soup.find(name="description")
+        #print '==='
+        #self.description = soup.find(name="description")['content']
+        links = soup.findAll("li",{"class":["level1","level2","level3","level4"]}) # 获取所有文章链接
+        ans = [] # 组成最终的数据结构
+        doctitle = ''
         articles = [] # 定义空文章资源数组
+        urls = []
         for link in links: # 循环处理所有文章链接
             if link.a.get("href") != None :
-                title = link.a.contents[0].strip() # 提取文章标题
-                url = site + link.a.get("href") # 提取文章链接
-                a = {'title': title , 'url':url} # 组合标题和链接
-                articles.append(a) # 累加到数组中
-        return (doctitle, articles)
+                print link['class']
+                print link.a.contents[0].strip()
+                if link['class'] == 'level1' :
+                    if len(articles) > 0 :
+                        ans.append((doctitle, articles))
+                    doctitle = link.a.contents[0].strip()
+                    articles = []
+                else :
+                    title = link.a.contents[0].strip() # 提取文章标题
+                    url = site + link.a.get("href").split('#')[0] # 提取文章链接
+                    if urls.count(url) == 0 :
+                        urls.append(url)
+                    else :
+                        url = ''
+                    a = {'title': title , 'url':url, 'content' : ''} # 组合标题和链接
+                    print a
+                    articles.append(a) # 累加到数组中
+        print ans
+        return ans # 返回可供 Calibre 转换的数据结构
