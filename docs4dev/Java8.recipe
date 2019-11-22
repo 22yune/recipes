@@ -26,6 +26,11 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
     #delay = 5 # 抓取页面间隔秒数
     max_articles_per_feed = 999 # 抓取文章数量
 
+    def get_browser(self):
+        br = BasicNewsRecipe.get_browser(self)
+        br.set_cookie('SESSION','OTI1ZjMzZGYtODU4NC00MzlmLTg1ZDUtZjI3NjJjYzU5NWNj','')
+        return br
+
     #///////////////////
     # 页面内容解析方法
     #///////////////////

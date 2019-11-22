@@ -1,0 +1,1 @@
+ebook-convert Mongodb.recipe Mongodb.mobi --output-profile kindle_oasis

@@ -2,6 +2,10 @@
 ### -#*- coding:gbk -*-
 
 from calibre.web.feeds.recipes import BasicNewsRecipe # 引入 Recipe 基础类
+import mechanize
+
+def prn_obj(obj):
+    print '\n'.join(['%s:%s' % item for item in obj.__dict__.items()])
 
 class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
 
@@ -27,23 +31,67 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
     max_articles_per_feed = 999 # 抓取文章数量
 
 
-
     def get_browser(self):
-        username = '39669591@qq.com'
-        password = 'aizbgo11'
+        username = ''
+        password = ''
         print('loging....brower====')
         br = BasicNewsRecipe.get_browser(self)
+        #options
+        br.set_handle_equiv(True)
+        br.set_handle_gzip(True)
+        br.set_handle_redirect(True)
+        br.set_handle_referer(True)
+        br.set_handle_robots(False)
+
+        #Follows refresh 0 but not hangs on refresh > 0
+        br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
+
+        '''
+        #debugging?
+        br.set_debug_http(True)
+        br.set_debug_redirects(True)
+        br.set_debug_responses(True)
+        '''
+        #User-Agent 模拟浏览器行为
+        br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+
         if username is not None and password is not None:
             br.open('https://www.docs4dev.com/login')
             #print br.select_form(nr=0)
-            print  br.select_form(placeholder="邮箱")
-            print  br.select_form(id="username")
-            print  br.select_form(id="password")
-            #br.select_form(name="order")
-            #br.form['password'] = password
-            #br.form['username']   = username
-            br.submit()
+
+            #prn_obj(br.forms()[0]._forms[0])
+            prn_obj(br.forms()[0] )
+            prn_obj(br.forms()[0].controls[3])
+            #print(br.forms()[0].controls)
+            br.forms()[0].controls[0] = username
+            br.forms()[0].controls[1] = password
+            #br.submit()
+            #print(br.forms()[0]._forms[0])
+            req = mechanize.Request('https://www.docs4dev.com/api/auth/login',headers = {
+                #'host': 'www.docs4dev.com',
+                #'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0',
+                'Accept': 'application/json',
+                #'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+                'Content-Type': 'application/json',
+                #'Accept-Encoding': 'gzip, deflate, br',
+                #'Referer': 'https://www.docs4dev.com/login',
+                #'X-DOCS4DEV-LANG': 'en',
+                #'Cookie': 'locale=zh_CN',
+                #'Origin': 'https://www.docs4dev.com',
+                #'Connection': 'keep-alive',
+                #'Pragma': 'no-cache',
+                #'Cache-Control': 'no-cache'
+            },method='post')
+            #req.host = 'www.docs4dev.com'
+            req.add_data('{"username":"674643665@qq.com","password":"12345678"}')
+            prn_obj(req)
+            #mechanize.urlopen(req)
+            #request2 = br.forms()[0].click()
+            #print(request2)
+            #br.open( req)
             print 'login.....'
+        #br.set_cookie('locale=zh_CN; SESSION=OTI1ZjMzZGYtODU4NC00MzlmLTg1ZDUtZjI3NjJjYzU5NWNj')
+        br.set_cookie('SESSION','OTI1ZjMzZGYtODU4NC00MzlmLTg1ZDUtZjI3NjJjYzU5NWNj','')
         return br
 
     #///////////////////

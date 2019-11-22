@@ -3,6 +3,9 @@
 
 from calibre.web.feeds.recipes import BasicNewsRecipe # 引入 Recipe 基础类
 
+def prn_obj(obj):
+    print '\n'.join(['%s:%s' % item for item in obj.__dict__.items()])
+
 class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
 
     #///////////////////
@@ -28,18 +31,25 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
 
     def get_browser(self):
         br = BasicNewsRecipe.get_browser(self)
-        br.set_cookie('SESSION','OTI1ZjMzZGYtODU4NC00MzlmLTg1ZDUtZjI3NjJjYzU5NWNj','')
+        br.set_cookie('SESSION','NWRjNGYzZmEtMThiMS00YTY3LWJkNjAtNDcyZWNjMDI1ODdm','')
         return br
     #///////////////////
     # 页面内容解析方法
     #///////////////////
-    
     def parse_index(self):
+        indexs = ['/docs/zh/logback/1.3.0-alpha4/reference']
+        ans = [] # 组成最终的数据结构
+        for index in indexs :
+            doc = self.parse_doc(index)
+            ans = ans + doc
+        return ans # 返回可供 Calibre 转换的数据结构
+
+    def parse_doc(self,index):
         site = 'https://www.docs4dev.com' # 页面列表页
-        index = '/docs/zh/spring-framework/4.3.21.RELEASE/reference'
+        #index = '/docs/zh/spring-framework/4.3.21.RELEASE/reference'
         soup = self.index_to_soup(site + index) # 解析列表页返回 BeautifulSoup 对象
-        self.title = soup.find('title').contents[0]
-        print 'title' 
+        self.title = soup.find('title').contents[0].replace('|','-')
+        print 'title'
         print soup.find('title').contents
         if self.title == None :
             return
@@ -56,14 +66,16 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
             if link.a.get("href") != None :
                 if link['class'] == 'level1' or link['class'] == 'level2' :
                     print link['class']
-                    print link.a.contents[0].strip()
+                    #prn_obj(link.a)
+                    #print link.a.contents
+                    print('===')
                 if link['class'] == 'level1' :
                     if len(articles) > 0 :
                         ans.append((doctitle, articles))
                     if len(link.a.contents) > 0 :
                         doctitle = link.a.contents[0].strip()
                         articles = []
-                else :
+                if len(link.a.contents) > 0 :
                     title = link.a.contents[0].strip() # 提取文章标题
                     url = site + link.a.get("href").split('#')[0] # 提取文章链接
                     if urls.count(url) == 0 :

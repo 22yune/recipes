@@ -43,6 +43,9 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
                 print herf
                 indexs.append(herf)
         #print soup.select('body #_next div section section main div div div div div div div div div.ant-spin-container ul.ant-list-items li.ant-list-item div a')
+        if len(indexs) > 0
+            #print(indexs)
+            return
         print '==='
             
         ans = [] # 组成最终的数据结构

@@ -33,13 +33,20 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
     #///////////////////
     # 页面内容解析方法
     #///////////////////
-    
     def parse_index(self):
+        indexs = ['/docs/zh/spring-framework/4.3.21.RELEASE/reference']
+        ans = [] # 组成最终的数据结构
+        for index in indexs :
+            doc = self.parse_doc(index)
+            ans = ans + doc
+        return ans # 返回可供 Calibre 转换的数据结构
+
+    def parse_doc(self,index):
         site = 'https://www.docs4dev.com' # 页面列表页
-        index = '/docs/zh/spring-framework/4.3.21.RELEASE/reference'
+        #index = '/docs/zh/spring-framework/4.3.21.RELEASE/reference'
         soup = self.index_to_soup(site + index) # 解析列表页返回 BeautifulSoup 对象
-        self.title = soup.find('title').contents[0]
-        print 'title' 
+        self.title = soup.find('title').contents[0].replace('|','-')
+        print 'title'
         print soup.find('title').contents
         if self.title == None :
             return
