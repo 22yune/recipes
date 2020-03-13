@@ -50,6 +50,11 @@ class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
         soup = self.index_to_soup(site + index) # 解析列表页返回 BeautifulSoup 对象
         self.title = soup.find('title').contents[0].replace('|','-')
         print 'title'
+        if soup:
+            print('Not Null')
+            print soup.__dict__
+            return
+        print 'ok'
         print soup.find('title').contents
         if self.title == None :
             return

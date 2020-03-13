@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+### -#*- coding:gbk -*-
+
+from calibre.web.feeds.recipes import BasicNewsRecipe # 引入 Recipe 基础类
+
+def prn_obj(obj):
+    print '\n'.join(['%s:%s' % item for item in obj.__dict__.items()])
+
+class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
+
+    #///////////////////
+    # 设置电子书元数据
+    #///////////////////
+    title = 'TCP/IP详解 卷1：协议' # 电子书名
+    #description = 'Spring中文文档' # 电子书简介
+    #cover_url = '' # 电子书封面
+    #masthead_url = '' # 页头图片
+    __author__ = 'W.Richard Stevens' # 作者
+    language = 'zh' # 语言
+    #encoding = 'GBK' # 编码
+
+    #///////////////////
+    # 抓取页面内容设置
+    #///////////////////
+    #keep_only_tags = [{ 'class': 'example' }] # 仅保留指定选择器包含的内容
+    no_stylesheets = True # 去除 CSS 样式
+    remove_javascript = True # 去除 JavaScript 脚本
+    auto_cleanup = True # 自动清理 HTML 代码
+    #delay = 6 # 抓取页面间隔秒数
+    max_articles_per_feed = 999 # 抓取文章数量
+
+
+    #///////////////////
+    # 页面内容解析方法
+    #///////////////////
+    def parse_index(self):
+        indexs = ['/docs/zh/mysql/5.7/reference']
+        ans = [] # 组成最终的数据结构
+        for index in indexs :
+            doc = self.parse_doc(index)
+            ans = ans + doc
+        return ans # 返回可供 Calibre 转换的数据结构
+
+    def parse_doc(self,index):
+        ans = [] # 组成最终的数据结构
+        articles = [{'title': '概述' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/1/'},{'title': '链路层' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/2/'},{'title': 'IP：网际协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/3/'},{'title': 'ARP：地址解析协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/4/'},{'title': 'RARP：逆地址解析协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/5/'},{'title': 'ICMP：Internet控制报文协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/6/'},{'title': 'Ping程序' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/7/'},{'title': 'Traceroute程序' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/8/'},{'title': 'IP选路' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/9/'},{'title': '动态选路协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/10/'},{'title': 'UDP：用户数据报协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/11/'},{'title': '广播和多播' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/12/'},{'title': 'IGMP：Internet组管理协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/13/'},{'title': 'DNS：域名系统' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/14/'},{'title': 'TFTP：简单文件传送协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/15/'},{'title': 'BOOTP: 引导程序协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/16/'},{'title': 'TCP：传输控制协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/17/'},{'title': 'TCP连接的建立与终止' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/18/'},{'title': 'TCP的交互数据流' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/19/'},{'title': 'TCP的成块数据流' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/20/'},{'title': 'TCP的超时与重传' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/21/'},{'title': 'TCP的坚持定时器' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/22/'},{'title': 'TCP的保活定时器' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/23/'},{'title': 'TCP的未来和性能' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/24/'},{'title': 'SNMP：简单网络管理协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/25/'},{'title': 'Telnet和Rlogin：远程登录' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/26/'},{'title': 'FTP：文件传送协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/27/'},{'title': 'SMTP：简单邮件传送协议' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/28/'},{'title': '网络文件系统' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/29/'},{'title': '其他的TCP/IP应用程序' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/30/'},{'title': 'tcpdump程序' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/a/'},{'title': '计算机时钟' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/b/'},{'title': 'sock程序' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/c/'},{'title': '部分习题的解答' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/d/'},{'title': '配置选项' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/e/'},{'title': '可以免费获得的源代码' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/f/'},{'title': '参考文献' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/g/'},{'title': '缩略语' , 'url':'http://docs.52im.net/extend/docs/book/tcpip/vol1/h/'}] # 定义空文章资源数组
+        if len(articles) > 0 :
+            ans.append((self.title, articles))
+        print ans
+        return ans # 返回可供 Calibre 转换的数据结构
