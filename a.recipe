@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+### -#*- coding:gbk -*-
+
+from calibre.web.feeds.recipes import BasicNewsRecipe # 引入 Recipe 基础类
+
+def prn_obj(obj):
+    print '\n'.join(['%s:%s' % item for item in obj.__dict__.items()])
+
+class Docs4dev(BasicNewsRecipe): # 继承 BasicNewsRecipe 类的新类名
+
+    #///////////////////
+    # 设置电子书元数据
+    #///////////////////
+    title = '软件设计的哲学' # 电子书名
+    #description = '软件设计的哲学' # 电子书简介
+    #cover_url = '' # 电子书封面
+    #masthead_url = '' # 页头图片
+    __author__ = ' ' # 作者
+    language = 'zh' # 语言
+    #encoding = 'GBK' # 编码
+
+    #///////////////////
+    # 抓取页面内容设置
+    #///////////////////
+    #keep_only_tags = [{ 'class': 'example' }] # 仅保留指定选择器包含的内容
+    no_stylesheets = True # 去除 CSS 样式
+    remove_javascript = True # 去除 JavaScript 脚本
+    auto_cleanup = True # 自动清理 HTML 代码
+    #delay = 6 # 抓取页面间隔秒数
+    max_articles_per_feed = 999 # 抓取文章数量
+
+
+    #///////////////////
+    # 页面内容解析方法
+    #///////////////////
+    def parse_index(self):
+        indexs = ['/docs/zh/mysql/5.7/reference']
+        ans = [] # 组成最终的数据结构
+        for index in indexs :
+            doc = self.parse_doc(index)
+            ans = ans + doc
+        return ans # 返回可供 Calibre 转换的数据结构
+
+    def parse_doc(self,index):
+        ans = [] # 组成最终的数据结构
+        articles = [
+{'title': '软件设计的哲学【翻译】--目录' , 'url':'https://www.cnblogs.com/peida/p/12052402.html'},
+{'title': '2020荐书：软件设计的哲学' , 'url':'https://www.cnblogs.com/peida/p/APhilosophyofSoftwareDesign.html'},
+{'title': '软件设计的哲学：前言' , 'url':'https://www.cnblogs.com/peida/p/12049010.html'},
+{'title': '软件设计的哲学：第一章 关于复杂性的介绍' , 'url':'https://www.cnblogs.com/peida/p/12049073.html'},
+{'title': '软件设计的哲学：第二章 复杂性的本质' , 'url':'https://www.cnblogs.com/peida/p/12049197.html'},
+{'title': '软件设计的哲学：第三章 编程的战术和战略' , 'url':'https://www.cnblogs.com/peida/p/12049222.html'},
+{'title': '软件设计的哲学：第四章 深度封装模块' , 'url':'https://www.cnblogs.com/peida/p/12056374.html'},
+{'title': '软件设计的哲学 第五章 隐藏信息' , 'url':'https://www.cnblogs.com/peida/p/12056388.html'},
+{'title': '软件设计的哲学： 第六章 更深的通用模块' , 'url':'https://www.cnblogs.com/peida/p/12060164.html'},
+{'title': '软件设计的哲学：第七章 不同层不同抽象' , 'url':'https://www.cnblogs.com/peida/p/12060204.html'},
+{'title': '软件设计的哲学：第八章 降低复杂性' , 'url':'https://www.cnblogs.com/peida/p/12065701.html'},
+{'title': '软件设计的哲学： 第九章 合并还是分解' , 'url':'https://www.cnblogs.com/peida/p/12071197.html'},
+{'title': '软件设计的哲学：第十一章 两次设计' , 'url':'https://www.cnblogs.com/peida/p/12078980.html'},
+{'title': '软件设计的哲学：第十二章 为什么要写注释' , 'url':'https://www.cnblogs.com/peida/p/12083304.html'},
+{'title': '软件设计的哲学：第十三章 注释应该描述代码中隐藏的内容' , 'url':'https://www.cnblogs.com/peida/p/12089832.html'},
+{'title': '软件设计的哲学：第十四章 选个好名字' , 'url':'https://www.cnblogs.com/peida/p/12095125.html'},
+{'title': '软件设计的哲学： 第十五章 先写注释' , 'url':'https://www.cnblogs.com/peida/p/12100547.html'},
+{'title': '软件设计的哲学：第十六章 修改现有代码' , 'url':'https://www.cnblogs.com/peida/p/12106836.html'},
+{'title': '软件设计的哲学：第十七章 一致性' , 'url':'https://www.cnblogs.com/peida/p/12110689.html'},
+{'title': '软件设计的哲学：第十八章 代码的可见性' , 'url':'https://www.cnblogs.com/peida/p/12118967.html'},
+{'title': '软件设计的哲学：第二十章 性能设计' , 'url':'https://www.cnblogs.com/peida/p/12124349.html'},
+{'title': '软件设计的哲学：第二十一章 结论' , 'url':'https://www.cnblogs.com/peida/p/12131589.html'},
+{'title': '软件设计的哲学：增加复杂度的12中危险信号' , 'url':'https://www.cnblogs.com/peida/p/12148088.html'}] # 定义空文章资源数组
+        if len(articles) > 0 :
+            ans.append((self.title, articles))
+        print ans
+        return ans # 返回可供 Calibre 转换的数据结构

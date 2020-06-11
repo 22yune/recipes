@@ -1,0 +1,1 @@
+ebook-convert a.recipe .mobi -mobi-file-type=new  -mobi-keep-original-images -output-profile=kindle_oasiss 
